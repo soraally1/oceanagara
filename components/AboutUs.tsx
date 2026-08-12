@@ -2,9 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 
-// ─── useCountUp: mulai hitung saat section masuk viewport ────────────────────
-
-function useCountUp(target: number, duration = 2200) {
+function useCountUp(target: number, duration = 2000) {
   const [count, setCount] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
   const started = useRef(false);
@@ -21,14 +19,14 @@ function useCountUp(target: number, duration = 2200) {
         const startTime = performance.now();
         const tick = (now: number) => {
           const progress = Math.min((now - startTime) / duration, 1);
-          const eased = 1 - Math.pow(1 - progress, 3); // easeOutCubic
+          const eased = 1 - Math.pow(1 - progress, 3);
           setCount(Math.round(eased * target));
           if (progress < 1) requestAnimationFrame(tick);
         };
         requestAnimationFrame(tick);
         observer.disconnect();
       },
-      { threshold: 0.1 } // trigger saat 10% section terlihat
+      { threshold: 0.1 }
     );
 
     observer.observe(section);
@@ -38,116 +36,143 @@ function useCountUp(target: number, duration = 2200) {
   return { count, sectionRef };
 }
 
-// ─── AboutUs ─────────────────────────────────────────────────────────────────
-
 export default function AboutUs() {
-  const { count, sectionRef } = useCountUp(5280);
+  const { count: zoneCount, sectionRef } = useCountUp(54);
 
   return (
     <section
       id="about-us"
       ref={sectionRef}
-      className="pb-24 bg-white border-b border-zinc-150"
+      className="py-20 bg-white border-b border-zinc-150"
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
 
-          {/* Column 1: Core System Specifications (Table style) */}
-          <div className="border border-zinc-200 bg-white p-8">
-            <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-6">
-              Parameter Sistem & Kinerja
-            </h3>
+          {/* Column 1: Core System Data Sources (Table style with real API data) */}
+          <div className="border border-zinc-200 bg-slate-50/50 p-6 sm:p-8 rounded-2xl shadow-sm">
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-zinc-200">
+              <h3 className="text-xs font-extrabold text-[#0c2d52] uppercase tracking-widest">
+                Integrasi Data Maritim Asli
+              </h3>
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-100 text-emerald-800 text-[10px] font-extrabold uppercase tracking-wider rounded-full">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                Live Telemetri Satelit
+              </span>
+            </div>
 
-            <div className="divide-y divide-zinc-200 text-xs text-zinc-600">
-              <div className="py-3.5 flex justify-between">
-                <span className="font-semibold text-zinc-900 uppercase tracking-wider">Frekuensi Pemantauan</span>
-                <span>Setiap 5 Detik</span>
+            <div className="divide-y divide-zinc-200 text-xs text-zinc-700">
+              <div className="py-3.5 flex justify-between items-center">
+                <span className="font-bold text-zinc-900 uppercase tracking-wider">Telemetri Gelombang &amp; Angin</span>
+                <span className="font-semibold text-[#0c2d52]">BMKG Peta Maritim API</span>
               </div>
-              <div className="py-3.5 flex justify-between">
-                <span className="font-semibold text-zinc-900 uppercase tracking-wider">Akurasi Rute Navigasi</span>
-                <span>Hingga ±2 Meter</span>
+              <div className="py-3.5 flex justify-between items-center">
+                <span className="font-bold text-zinc-900 uppercase tracking-wider">Suhu &amp; Klorofil-a Laut</span>
+                <span className="font-semibold text-[#0c2d52]">NASA GIBS Satelit</span>
               </div>
-              <div className="py-3.5 flex justify-between">
-                <span className="font-semibold text-zinc-900 uppercase tracking-wider">Respon Sinyal SOS</span>
-                <span>Real-time (&lt; 1 Detik)</span>
+              <div className="py-3.5 flex justify-between items-center">
+                <span className="font-bold text-zinc-900 uppercase tracking-wider">Deteksi Kekeruhan &amp; Limbah</span>
+                <span className="font-semibold text-[#0c2d52]">Sentinel-2 ESA Satelit</span>
               </div>
-              <div className="py-3.5 flex justify-between">
-                <span className="font-semibold text-zinc-900 uppercase tracking-wider">Kapasitas Kapal Terhubung</span>
-                <span>Maks. 50,000 Unit</span>
+              <div className="py-3.5 flex justify-between items-center">
+                <span className="font-bold text-zinc-900 uppercase tracking-wider">Kepadatan Kapal AIS</span>
+                <span className="font-semibold text-[#0c2d52]">Global Fishing Watch (GFW)</span>
               </div>
-              <div className="py-3.5 flex justify-between">
-                <span className="font-semibold text-zinc-900 uppercase tracking-wider">Sertifikasi Protokol Keamanan</span>
-                <span>AES-256 Encrypted</span>
+              <div className="py-3.5 flex justify-between items-center">
+                <span className="font-bold text-zinc-900 uppercase tracking-wider">Validasi Laporan Limbah</span>
+                <span className="font-semibold text-[#0c2d52]">3-Lapis AI (EXIF, GPS, Vision)</span>
               </div>
-              <div className="py-3.5 flex justify-between">
-                <span className="font-semibold text-zinc-900 uppercase tracking-wider">Uptime Sistem Operasional</span>
-                <span>99.98% Radar Uptime</span>
+              <div className="py-3.5 flex justify-between items-center">
+                <span className="font-bold text-zinc-900 uppercase tracking-wider">Penyimpanan &amp; Sync</span>
+                <span className="font-semibold text-[#0c2d52]">Firebase Cloud Firestore</span>
               </div>
             </div>
 
-            {/* Quick Metrics Bar */}
+            {/* Quick Metrics Bar with Real Platform Metrics */}
             <div className="grid grid-cols-3 gap-4 mt-8 pt-6 border-t border-zinc-200 text-center">
-              {/* Armada Aktif — animated counter */}
               <div>
-                <span className="block text-xl font-bold text-zinc-900 tabular-nums">
-                  {count.toLocaleString('id-ID')}+
+                <span className="block text-xl font-extrabold text-[#0c2d52] tabular-nums">
+                  {zoneCount} Wilayah
                 </span>
-                <span className="text-[10px] text-zinc-400 uppercase tracking-wider block mt-1">
-                  Armada Aktif
+                <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider block mt-1">
+                  Stasiun BMKG
                 </span>
               </div>
               <div>
-                <span className="block text-xl font-bold text-zinc-900">24 Jam</span>
-                <span className="text-[10px] text-zinc-400 uppercase tracking-wider block mt-1">Siaga SOS</span>
+                <span className="block text-xl font-extrabold text-[#0c2d52]">3 Peran</span>
+                <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider block mt-1">
+                  Nelayan, Peneliti, Warga
+                </span>
               </div>
               <div>
-                <span className="block text-xl font-bold text-zinc-900">12 Bandara</span>
-                <span className="text-[10px] text-zinc-400 uppercase tracking-wider block mt-1">Dermaga Utama</span>
+                <span className="block text-xl font-extrabold text-[#0c2d52]">Real-Time</span>
+                <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider block mt-1">
+                  Peringatan Dini
+                </span>
               </div>
             </div>
           </div>
 
           {/* Column 2: Text Narrative */}
           <div className="flex flex-col justify-center">
-            <span className="text-zinc-400 text-xs font-semibold uppercase tracking-widest">
-              Tentang Kami
+            <span className="text-[#0c2d52] text-xs font-extrabold uppercase tracking-widest">
+              Tentang Oceanagara
             </span>
-            <h2 className="mt-2 text-2xl md:text-3xl font-bold tracking-tight text-zinc-900 uppercase leading-tight">
-              Membangun Kedaulatan & Keamanan Bahari Indonesia
+            <h2 className="mt-2 text-2xl md:text-3xl font-extrabold tracking-tight text-zinc-900 leading-tight">
+              Sistem Peringatan Dini Eco-Health &amp; Navigasi Maritim Terpadu
             </h2>
-            <div className="mt-4 h-0.5 w-16 bg-zinc-900" />
+            <div className="mt-4 h-1 w-16 bg-[#0c2d52] rounded-full" />
 
-            <p className="mt-6 text-sm text-zinc-500 leading-relaxed">
-              Oceanagara adalah platform navigasi maritim digital terpadu yang dirancang untuk memperkuat keselamatan berlayar dan stabilitas rantai dingin logistik ikan bagi nelayan Indonesia.
-            </p>
-            <p className="mt-4 text-sm text-zinc-500 leading-relaxed">
-              Kami menyatukan telemetry satelit radar dengan instrumen pelacakan cold chain untuk menjamin bahwa ikan hasil tangkapan nelayan sampai di pelabuhan dalam kondisi terbaik, sekaligus memastikan setiap pelayaran terpantau penuh oleh otoritas laut.
+            <p className="mt-6 text-sm text-zinc-600 leading-relaxed font-normal">
+              Oceanagara menghadirkan ekosistem digital maritim berbasis data asli satelit dan BMKG. Kami menghubungkan nelayan tradisional, peneliti bahari, dan masyarakat pesisir dalam satu platform peringatan dini untuk menjaga kesehatan perairan dan keselamatan laut Indonesia.
             </p>
 
-            <div className="mt-8 space-y-3.5">
-              <div className="flex items-center gap-3">
-                <svg className="w-4 h-4 text-zinc-800 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-                <span className="text-xs font-semibold text-zinc-700 uppercase tracking-wide">
-                  Pemantauan Zona Navigasi & Karang Dangkal Terintegrasi
-                </span>
+            <div className="mt-8 space-y-4">
+              <div className="flex items-start gap-3.5">
+                <div className="w-6 h-6 rounded-md bg-emerald-100 text-emerald-700 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="text-xs font-extrabold text-zinc-900 uppercase tracking-wide">
+                    Navigasi Zona Tangkap Pesisir (&lt; 12 Mil)
+                  </h4>
+                  <p className="text-xs text-zinc-500 mt-0.5 leading-relaxed">
+                    Membantu nelayan menemukan lokasi kumpul ikan terdekat dilengkapi estimasi rute hemat BBM dan indikator tinggi ombak BMKG.
+                  </p>
+                </div>
               </div>
-              <div className="flex items-center gap-3">
-                <svg className="w-4 h-4 text-zinc-800 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-                <span className="text-xs font-semibold text-zinc-700 uppercase tracking-wide">
-                  Sistem Alarm SOS Instan Langsung ke Basarnas & Syahbandar
-                </span>
+
+              <div className="flex items-start gap-3.5">
+                <div className="w-6 h-6 rounded-md bg-emerald-100 text-emerald-700 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="text-xs font-extrabold text-zinc-900 uppercase tracking-wide">
+                    Lapor Limbah &amp; Minyak dengan GPS Terverifikasi
+                  </h4>
+                  <p className="text-xs text-zinc-500 mt-0.5 leading-relaxed">
+                    Nelayan di laut dan warga pesisir dapat mengirim bukti foto limbah yang tervalidasi 3-lapis AI &amp; tersinkronisasi otomatis ke dashboard peneliti.
+                  </p>
+                </div>
               </div>
-              <div className="flex items-center gap-3">
-                <svg className="w-4 h-4 text-zinc-800 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-                <span className="text-xs font-semibold text-zinc-700 uppercase tracking-wide">
-                  Pencatatan Rantai Dingin Digital Berbasis Sensor Suhu Kapal
-                </span>
+
+              <div className="flex items-start gap-3.5">
+                <div className="w-6 h-6 rounded-md bg-emerald-100 text-emerald-700 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="text-xs font-extrabold text-zinc-900 uppercase tracking-wide">
+                    Pemetaan Risiko &amp; Arus Pencemaran Spasial
+                  </h4>
+                  <p className="text-xs text-zinc-500 mt-0.5 leading-relaxed">
+                    Peneliti dapat memantau peta risiko eco-health laut, mensimulasikan pergerakan lintasan partikel limbah, serta mengevaluasi kualitas ikan secara ilmiah.
+                  </p>
+                </div>
               </div>
             </div>
           </div>

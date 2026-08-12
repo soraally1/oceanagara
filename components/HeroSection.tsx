@@ -23,12 +23,12 @@ export default function HeroSection() {
         <div className="max-w-2xl text-white select-text">
           {/* Title */}
           <Image
-          src="/img/logo.svg"
-          alt="OCEANAGARA"
-          width={300}
-          height={80}
-          priority
-        />
+            src="/img/logo.svg"
+            alt="OCEANAGARA"
+            width={600}
+            height={80}
+            priority
+          />
 
           {/* Tagline */}
           <p className="text-base sm:text-lg md:text-xl font-medium tracking-wide text-zinc-100 leading-relaxed mb-8">

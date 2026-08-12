@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { onAuthChange, redirectUserIfLoggedIn } from "@/app/service/authentication";
 import HeroSection from "@/components/HeroSection";
+import SupportLogos from "@/components/SupportLogos";
 import Features from "@/components/Features";
 import OceanAnalysis from "@/components/OceanAnalysis";
 import AboutUs from "@/components/AboutUs";
@@ -42,8 +43,12 @@ export default function Home() {
 
       {/* Main content wrapper */}
       <main className="flex-grow">
+
         {/* Features list (Cerdas Memantau, Aman Berlayar, Mutu Terjaga) */}
         <Features />
+
+        {/* Support Logos Slider (BMKG, Copernicus ESA, Global Fishing Watch) */}
+        <SupportLogos />
 
         {/* Ocean condition analysis with NRT charts */}
         <OceanAnalysis />

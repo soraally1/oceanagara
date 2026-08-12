@@ -193,9 +193,6 @@ export default function ZonaTangkapIkanTradisionalPage() {
               <p className="text-xs text-zinc-300 mt-0.5">Pangkalan: {vesselInfo.wilayahOperasi}</p>
             </div>
           </div>
-          <span className="px-3 py-1 bg-[#163e6e] border border-sky-400/40 text-sky-200 text-xs font-bold rounded-lg uppercase tracking-wider flex-shrink-0">
-            Kalkulasi Khusus Kapal Ini
-          </span>
         </div>
 
         {phase === 'form' && (
