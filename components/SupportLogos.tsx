@@ -27,9 +27,6 @@ export default function SupportLogos() {
     ...SUPPORT_LOGOS,
     ...SUPPORT_LOGOS,
     ...SUPPORT_LOGOS,
-    ...SUPPORT_LOGOS,
-    ...SUPPORT_LOGOS,
-    ...SUPPORT_LOGOS,
   ];
 
   return (
@@ -46,12 +43,12 @@ export default function SupportLogos() {
       <div className="pointer-events-none absolute inset-y-0 right-0 w-24 sm:w-40 bg-gradient-to-l from-slate-50 via-slate-50/80 to-transparent z-10" />
 
       {/* Infinite Horizontal Marquee Track (Right to Left) */}
-      <div className="flex w-full overflow-hidden select-none">
-        <div className="flex items-center gap-12 sm:gap-24 animate-marquee whitespace-nowrap min-w-full flex-shrink-0">
+      <div className="flex w-full overflow-hidden select-none group">
+        <div className="flex items-center gap-12 sm:gap-24 animate-marquee whitespace-nowrap flex-shrink-0 group-hover:[animation-play-state:paused] pr-12 sm:pr-24">
           {marqueeLogos.map((logo, idx) => (
             <div
               key={`logo-1-${idx}`}
-              className="flex items-center justify-center h-12 sm:h-16 px-4 grayscale hover:grayscale-0 opacity-75 hover:opacity-100 transition-all duration-300 transform hover:scale-105 cursor-pointer"
+              className="flex items-center justify-center h-12 sm:h-16 px-2 sm:px-4 grayscale hover:grayscale-0 opacity-75 hover:opacity-100 transition-all duration-300 transform hover:scale-105 cursor-pointer"
               title={logo.name}
             >
               <Image
@@ -65,12 +62,12 @@ export default function SupportLogos() {
 
         <div
           aria-hidden="true"
-          className="flex items-center gap-12 sm:gap-24 animate-marquee whitespace-nowrap min-w-full flex-shrink-0"
+          className="flex items-center gap-12 sm:gap-24 animate-marquee whitespace-nowrap flex-shrink-0 group-hover:[animation-play-state:paused] pr-12 sm:pr-24"
         >
           {marqueeLogos.map((logo, idx) => (
             <div
               key={`logo-2-${idx}`}
-              className="flex items-center justify-center h-12 sm:h-16 px-4 grayscale hover:grayscale-0 opacity-75 hover:opacity-100 transition-all duration-300 transform hover:scale-105 cursor-pointer"
+              className="flex items-center justify-center h-12 sm:h-16 px-2 sm:px-4 grayscale hover:grayscale-0 opacity-75 hover:opacity-100 transition-all duration-300 transform hover:scale-105 cursor-pointer"
               title={logo.name}
             >
               <Image
