@@ -1,15 +1,17 @@
 import Image from 'next/image';
 import Navbar from './Navbar';
+import heroBg from '@/public/img/nelayan 3.webp';
+import logoHeader from '@/public/img/logo.svg';
 
 export default function HeroSection() {
   return (
-    <section className="relative w-full min-h-[80vh] md:min-h-[130vh] flex flex-col justify-between overflow-hidden ">
+    <section className="relative w-full min-h-[80vh] md:min-h-[130vh] flex flex-col justify-between overflow-hidden">
       {/* Navigation */}
       <Navbar />
-      {/* Background Image */}
+      {/* Background Image (Explicit ES Import for production build bundling) */}
       <div className="absolute inset-0 w-full h-full z-0 select-none pointer-events-none">
         <Image
-          src="/img/nelayan 3.png"
+          src={heroBg}
           alt="Traditional fisherman boat in the open ocean"
           fill
           priority
@@ -21,9 +23,9 @@ export default function HeroSection() {
       {/* Hero content */}
       <div className="relative z-10 flex-1 max-w-7xl mx-auto px-6 md:px-12 w-full flex items-center pt-24 pb-16">
         <div className="max-w-2xl text-white select-text">
-          {/* Title */}
+          {/* Title Logo (Explicit ES Import) */}
           <Image
-            src="/img/logo.svg"
+            src={logoHeader}
             alt="OCEANAGARA"
             width={600}
             height={80}
@@ -45,7 +47,7 @@ export default function HeroSection() {
             </a>
             <a
               href="#feature"
-              className="px-6 py-3 border border-white text-white text-xs font-bold uppercase tracking-wider hover:bg-white hover:text-zinc-950 transition-colors duration-200"
+              className="px-6 py-3 border border-white text-white text-xs font-bold uppercase tracking-wider hover:bg-white hover:text-zinc-955 transition-colors duration-200"
             >
               Pelajari Fitur
             </a>

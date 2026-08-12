@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import logoBlue from '@/public/img/logoblue.svg';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -22,13 +23,14 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled
           ? 'bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-md py-3.5'
           : 'bg-transparent py-5'
-        }`}
+      }`}
     >
       <div className="w-full px-6 sm:px-10 md:px-16 lg:px-20 flex items-center justify-between">
-
+        
         {/* ── Brand Logo ── */}
         <Link
           href="/"
@@ -36,13 +38,20 @@ export default function Navbar() {
         >
           <div className="relative w-9 h-9 sm:w-10 sm:h-10 flex-shrink-0">
             <Image
-              src="/img/logoblue.svg"
+              src={logoBlue}
               alt="OCEANAGARA Logo"
               fill
               priority
               className="object-contain"
             />
           </div>
+          <span
+            className={`font-extrabold tracking-widest text-lg sm:text-xl uppercase transition-colors duration-200 ${
+              isScrolled ? 'text-[#0c2d52]' : 'text-[#0c2d52]'
+            }`}
+          >
+            OCEANAGARA
+          </span>
         </Link>
 
         {/* ── Desktop Navigation Links ── */}
@@ -101,8 +110,9 @@ export default function Navbar() {
 
       {/* ── Mobile Slide-Over Menu Drawer ── */}
       <div
-        className={`md:hidden fixed inset-0 z-50 bg-[#0c2d52]/95 backdrop-blur-lg transform transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
-          }`}
+        className={`md:hidden fixed inset-0 z-50 bg-[#0c2d52]/95 backdrop-blur-lg transform transition-transform duration-300 ease-in-out ${
+          isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
       >
         <div className="flex flex-col h-full justify-between p-8">
           {/* Top Bar inside Drawer */}
@@ -110,7 +120,7 @@ export default function Navbar() {
             <div className="flex items-center gap-2.5">
               <div className="relative w-8 h-8">
                 <Image
-                  src="/img/logoblue.svg"
+                  src={logoBlue}
                   alt="OCEANAGARA Logo"
                   fill
                   className="object-contain brightness-0 invert"

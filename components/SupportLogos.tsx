@@ -1,19 +1,23 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
+import logoBMKG from '@/public/logo/LogoBMKG.svg';
+import logoCopernicus from '@/public/logo/Coppernicus.svg';
+import logoGFW from '@/public/logo/GFWlogo.svg';
 
 const SUPPORT_LOGOS = [
   {
     name: 'BMKG - Badan Meteorologi, Klimatologi, dan Geofisika',
-    src: '/logo/LogoBMKG.svg',
+    src: logoBMKG,
   },
   {
     name: 'Copernicus - European Space Agency (ESA)',
-    src: '/logo/Coppernicus.svg',
+    src: logoCopernicus,
   },
   {
     name: 'Global Fishing Watch (GFW)',
-    src: '/logo/GFWlogo.svg',
+    src: logoGFW,
   },
 ];
 
@@ -50,7 +54,7 @@ export default function SupportLogos() {
               className="flex items-center justify-center h-12 sm:h-16 px-4 grayscale hover:grayscale-0 opacity-75 hover:opacity-100 transition-all duration-300 transform hover:scale-105 cursor-pointer"
               title={logo.name}
             >
-              <img
+              <Image
                 src={logo.src}
                 alt={logo.name}
                 className="h-10 sm:h-14 w-auto object-contain max-w-[150px] sm:max-w-[220px]"
@@ -69,7 +73,7 @@ export default function SupportLogos() {
               className="flex items-center justify-center h-12 sm:h-16 px-4 grayscale hover:grayscale-0 opacity-75 hover:opacity-100 transition-all duration-300 transform hover:scale-105 cursor-pointer"
               title={logo.name}
             >
-              <img
+              <Image
                 src={logo.src}
                 alt={logo.name}
                 className="h-10 sm:h-14 w-auto object-contain max-w-[150px] sm:max-w-[220px]"

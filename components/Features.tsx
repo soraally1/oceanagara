@@ -4,6 +4,11 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 
+import type { StaticImageData } from 'next/image';
+import penelitiImg from '@/public/img/Peneliti 1.webp';
+import masyarakatImg from '@/public/img/masyarakat 1.webp';
+import nelayanImg from '@/public/img/nelayan 1.webp';
+
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 interface Feature {
@@ -12,7 +17,7 @@ interface Feature {
   description: string;
   details: string[];
   accentColor: string;
-  imageSrc: string;
+  imageSrc: StaticImageData | string;
   rotate: number;
   stackOrder: number;
 }
@@ -33,7 +38,7 @@ const FEATURES: Feature[] = [
       'Dashboard armada terpusat',
     ],
     accentColor: '#ffffff',
-    imageSrc: '/img/Peneliti 1.png',
+    imageSrc: penelitiImg,
     rotate: -8,
     stackOrder: 2,
   },
@@ -50,7 +55,7 @@ const FEATURES: Feature[] = [
       'Riwayat koordinat kecelakaan maritim',
     ],
     accentColor: '#ffffff',
-    imageSrc: '/img/masyarakat 1.png',
+    imageSrc: masyarakatImg,
     rotate: 6,
     stackOrder: 1,
   },
@@ -67,7 +72,7 @@ const FEATURES: Feature[] = [
       'Integrasi data ke sistem logistik pelabuhan',
     ],
     accentColor: '#ffffff',
-    imageSrc: '/img/nelayan 1.png',
+    imageSrc: nelayanImg,
     rotate: 2,
     stackOrder: 3,
   },
