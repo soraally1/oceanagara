@@ -46,7 +46,7 @@ export default function HeroSection() {
           {/* Action buttons (CTAs) */}
           <div className="flex flex-col sm:flex-row gap-3.5 sm:gap-4 w-full sm:w-auto">
             <a
-              href="#maps"
+              href="/login"
               className="px-7 py-3.5 bg-[#001A45] text-white text-xs sm:text-sm font-extrabold uppercase tracking-wider rounded-xl hover:bg-[#001A45]/90 transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2 text-center"
             >
               Mulai Memantau
