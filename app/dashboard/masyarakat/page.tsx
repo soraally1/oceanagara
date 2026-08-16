@@ -524,7 +524,7 @@ export default function DashboardMasyarakatPage() {
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-normal text-white tracking-tight drop-shadow">
               Halo! Selamat datang <span className="font-bold">{displayName}</span>
             </h1>
-            <p className="text-sm sm:text-base italic text-sky-100/90 font-light tracking-wide drop-shadow">
+            <p className="text-sm sm:text-lg italic text-sky-100/90 font-light tracking-wide drop-shadow">
               pelajari informasi penting seputar kualitas ikan, cara pengolahan, dan kondisi ekosistem laut
             </p>
           </div>
@@ -549,6 +549,11 @@ export default function DashboardMasyarakatPage() {
           </div>
 
           {/* ── Top 3 Cards Grid (Frame 15, 16, 17 reference) ── */}
+          <div className="mb-6">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white tracking-wide drop-shadow-md">
+              Pelajari artikel berikut ini :
+            </h2>
+          </div>
           <div className="grid grid-cols-3 gap-3 md:gap-6">
             {FEATURE_CARDS.map((card) => (
               <Link
@@ -667,40 +672,6 @@ export default function DashboardMasyarakatPage() {
 
       <section className="bg-white border-t border-zinc-100 py-16 px-6 md:px-12 lg:px-16">
         <div className="max-w-7xl mx-auto space-y-8">
-          <div className="text-center max-w-xl mx-auto">
-            <span className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 block mb-2">
-              Pusat Edukasi &amp; Informasi
-            </span>
-            <h2 className="text-2xl font-extrabold text-[#162e52] uppercase tracking-tight">
-              Wawasan Kelautan untuk Masyarakat
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="p-6 bg-white border border-zinc-200 rounded-2xl space-y-3 hover:border-zinc-400 transition-colors shadow-sm">
-              <div className="w-10 h-10 rounded-xl bg-[#162e52] text-white flex items-center justify-center font-bold text-sm shadow-sm">01</div>
-              <h4 className="text-sm font-bold text-[#162e52] uppercase tracking-wider">Kenali Kualitas Ikan</h4>
-              <p className="text-xs text-zinc-600 leading-relaxed">
-                Pelajari 8 indikator utama membedakan ikan segar dan tidak layak konsumsi untuk melindungi kesehatan keluarga.
-              </p>
-            </div>
-
-            <div className="p-6 bg-white border border-zinc-200 rounded-2xl space-y-3 hover:border-zinc-400 transition-colors shadow-sm">
-              <div className="w-10 h-10 rounded-xl bg-[#162e52] text-white flex items-center justify-center font-bold text-sm shadow-sm">02</div>
-              <h4 className="text-sm font-bold text-[#162e52] uppercase tracking-wider">Pengolahan Higienis</h4>
-              <p className="text-xs text-zinc-600 leading-relaxed">
-                Ikuti 6 langkah pengolahan ikan yang benar dari pendinginan hingga penyimpanan untuk menjaga nutrisi dan keamanan pangan.
-              </p>
-            </div>
-
-            <div className="p-6 bg-white border border-zinc-200 rounded-2xl space-y-3 hover:border-zinc-400 transition-colors shadow-sm">
-              <div className="w-10 h-10 rounded-xl bg-[#162e52] text-white flex items-center justify-center font-bold text-sm shadow-sm">03</div>
-              <h4 className="text-sm font-bold text-[#162e52] uppercase tracking-wider">Ekosistem Air Laut</h4>
-              <p className="text-xs text-zinc-600 leading-relaxed">
-                Pahami 5 parameter kualitas air laut dan peran penting ekosistem pesisir untuk kehidupan biota laut dan kesejahteraan nelayan.
-              </p>
-            </div>
-          </div>
           <FishScanner />
         </div>
       </section>

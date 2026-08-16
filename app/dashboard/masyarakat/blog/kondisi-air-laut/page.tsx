@@ -3,81 +3,50 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { onAuthChange, getUserProfile } from '@/app/service/authentication';
 import heroImg from '@/public/img/MasyarakatAirLaut.webp';
 import articleImg from '@/public/img/ocean_water_quality.png';
 import relatedImg1 from '@/public/img/MasyarakatKualitasIkan.webp';
 import relatedImg2 from '@/public/img/MasyarakatPengolahanIkan.webp';
-
-const PARAMETERS = [
-  {
-    number: '01',
-    title: 'Kejernihan dan Warna Air',
-    unit: 'Visibilitas minimal 10 meter',
-    valueRange: 'Biru jernih, tanpa lapisan minyak atau buih berlebih',
-    detail:
-      'Kejernihan air laut dipengaruhi oleh kandungan partikel tersuspensi, fitoplankton, dan material organik terlarut. Air yang jernih dengan visibilitas tinggi mengindikasikan rendahnya tingkat polusi dan sedimentasi. Warna air yang berubah menjadi hijau pekat, cokelat, atau berbusa bisa menandakan blooming alga berbahaya (HAB) atau masuknya limbah organik dalam jumlah besar.',
-    indicators: ['Air berwarna biru atau biru-hijau alami', 'Tidak ada lapisan minyak di permukaan', 'Visibilitas bawah air minimal 10 meter', 'Tidak ada buih putih berlebihan'],
-    warning: 'Warna cokelat atau merah dapat menandakan red tide — fenomena berbahaya bagi biota laut dan manusia.',
-  },
-  {
-    number: '02',
-    title: 'Salinitas (Kadar Garam)',
-    unit: 'PSU (Practical Salinity Unit)',
-    valueRange: '30 – 35 PSU untuk laut tropis',
-    detail:
-      'Salinitas adalah ukuran konsentrasi garam terlarut dalam air laut. Nilai normal laut tropis Indonesia berkisar antara 30–35 PSU. Penurunan salinitas di bawah 28 PSU (hiposalinitas) biasanya disebabkan oleh masukan air tawar berlebih seperti limpasan hujan atau sungai, yang dapat memengaruhi tekanan osmotik organisme laut. Salinitas tinggi di atas 40 PSU (hipersalinitas) ditemukan di area dengan penguapan tinggi.',
-    indicators: ['Nilai normal 30–35 PSU', 'Stabil sepanjang musim', 'Penyimpangan pada musim hujan atau kemarau ekstrem', 'Bisa diukur dengan refraktometer atau salinometer'],
-    warning: 'Perubahan salinitas mendadak dapat menyebabkan kematian massal biota laut yang sensitif.',
-  },
-  {
-    number: '03',
-    title: 'Derajat Keasaman (pH)',
-    unit: 'Skala 0–14 (pH)',
-    valueRange: '7.8 – 8.3 (sedikit basa) optimal',
-    detail:
-      'Air laut secara alami bersifat sedikit basa dengan pH 7.8–8.3. Nilai ini penting untuk proses kalsifikasi biota seperti karang, moluska, dan krustasea. Penyerapan karbon dioksida (CO2) berlebih dari atmosfer menyebabkan pengasaman laut — penurunan pH yang mengancam kemampuan karang membentuk rangka kalsium karbonat. Ini merupakan dampak nyata perubahan iklim pada ekosistem pesisir.',
-    indicators: ['pH 7.8–8.3 adalah rentang sehat', 'Di bawah 7.8 berpotensi merusak karang', 'Pengasaman terkait emisi CO2 global', 'Dapat diukur dengan pH meter digital'],
-    warning: 'Penurunan pH sebesar 0.1 unit setara dengan peningkatan keasaman 26% — jauh lebih signifikan dari yang terlihat.',
-  },
-  {
-    number: '04',
-    title: 'Oksigen Terlarut (DO)',
-    unit: 'mg/L (miligram per liter)',
-    valueRange: 'Minimal 6 mg/L untuk kehidupan biota',
-    detail:
-      'Dissolved Oxygen (DO) adalah oksigen yang larut dalam air dan tersedia bagi organisme laut untuk bernapas. Nilai DO minimal 6 mg/L diperlukan agar mayoritas ikan dan biota bentik dapat bertahan hidup. Eutrofikasi — kelebihan nutrisi dari limbah pertanian dan rumah tangga — menyebabkan pertumbuhan alga masif, lalu kematian alga, kemudian dekomposisi yang menguras oksigen hingga terjadi "zona mati" (dead zone) di mana hampir tidak ada kehidupan.',
-    indicators: ['Nilai normal: 6–8 mg/L', 'Di bawah 4 mg/L: stres pada ikan', 'Di bawah 2 mg/L: kondisi kritis, kematian massal', 'Lebih tinggi di perairan yang banyak fitoplankton aktif'],
-    warning: 'Dead zone hipoksik terbesar di dunia mencakup ribuan kilometer persegi dan terus meluas akibat polusi nutrisi.',
-  },
-  {
-    number: '05',
-    title: 'Biota Indikator Ekosistem',
-    unit: 'Keragaman spesies (indeks biodiversitas)',
-    valueRange: 'Karang hidup, lamun, ikan beragam',
-    detail:
-      'Kehadiran dan keragaman spesies tertentu merupakan bioindikator alami kesehatan ekosistem laut. Terumbu karang yang hidup dan berwarna-warni, padang lamun yang subur, serta keragaman ikan karang yang tinggi menandakan kondisi perairan yang sehat. Sebaliknya, dominasi alga cokelat atau karang mati berwarna putih (bleaching) mengindikasikan tekanan ekosistem yang serius.',
-    indicators: ['Terumbu karang berwarna dengan tutupan tinggi', 'Padang lamun lebat dan sehat', 'Keragaman ikan karang tinggi', 'Tidak ada dominasi satu spesies invasif'],
-    warning: 'Pemutihan karang (coral bleaching) terjadi ketika suhu naik 1-2 derajat di atas rata-rata selama beberapa minggu.',
-  },
-];
+import OceanWaterSimulator from '@/components/blog/OceanWaterSimulator';
 
 const THREATS = [
   {
     title: 'Pencemaran Plastik',
     desc: 'Mikroplastik tertelan biota laut, masuk rantai makanan, dan akhirnya dapat dikonsumsi manusia melalui seafood.',
+    icon: (
+      <svg className="w-5 h-5 text-sky-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+      </svg>
+    ),
   },
   {
     title: 'Limpasan Pertanian',
     desc: 'Pupuk nitrogen dan fosfor dari lahan pertanian memicu eutrofikasi yang mengurangi oksigen terlarut secara drastis.',
+    icon: (
+      <svg className="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v18m9-9H3" />
+      </svg>
+    ),
   },
   {
     title: 'Limbah Industri',
     desc: 'Logam berat seperti merkuri, timbal, dan kadmium terakumulasi dalam jaringan ikan dan berbahaya bila dikonsumsi.',
+    icon: (
+      <svg className="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+      </svg>
+    ),
   },
   {
     title: 'Pengasaman Laut',
     desc: 'Penyerapan CO2 dari emisi fosil menurunkan pH laut, mengancam karang, moluska, dan ekosistem pesisir secara keseluruhan.',
+    icon: (
+      <svg className="w-5 h-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5" />
+      </svg>
+    ),
   },
 ];
 
@@ -92,7 +61,6 @@ function LoadingScreen() {
 export default function KondisiAirLautBlogPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [activeParam, setActiveParam] = useState<number | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthChange(async (user) => {
@@ -163,212 +131,164 @@ export default function KondisiAirLautBlogPage() {
         <div className="absolute inset-0 bg-gradient-to-t from-[#06111e]/93 via-[#06111e]/45 to-transparent" />
 
         <div className="relative z-10 max-w-5xl mx-auto px-6 md:px-12 w-full pb-14">
-          <div className="mb-4">
-            <span className="inline-block px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-white/15 border border-white/25 text-sky-200 rounded backdrop-blur-sm">
-              Ekosistem Laut
-            </span>
-          </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white leading-tight tracking-tight mb-4 max-w-2xl">
-            Edukasi Kondisi Air Laut
-          </h1>
-          <div className="flex items-center gap-4 text-xs text-white/55">
-            <div className="flex items-center gap-1.5">
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-              </svg>
-              <span>6 menit baca</span>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="mb-4">
+              <span className="inline-flex items-center gap-2 px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-white/15 border border-white/25 text-sky-200 rounded backdrop-blur-sm">
+                <svg className="w-3.5 h-3.5 text-sky-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 0 0 9-9c0-4.97-4.03-9-9-9s-9 4.03-9 9a9 9 0 0 0 9 9Z" />
+                </svg>
+                Ekosistem Laut
+              </span>
             </div>
-            <span className="w-1 h-1 rounded-full bg-white/30" />
-            <span>5 parameter kunci</span>
-            <span className="w-1 h-1 rounded-full bg-white/30" />
-            <span>Sains Kelautan</span>
-          </div>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white leading-tight tracking-tight mb-4 max-w-2xl">
+              Edukasi Parameter & Kesehatan Air Laut
+            </h1>
+            <div className="flex flex-wrap items-center gap-4 text-xs text-white/70">
+              <div className="flex items-center gap-1.5">
+                <svg className="w-3.5 h-3.5 text-sky-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+                <span>5 menit panduan visual</span>
+              </div>
+              <span className="w-1 h-1 rounded-full bg-white/40" />
+              <span>5 Parameter Interaktif</span>
+              <span className="w-1 h-1 rounded-full bg-white/40" />
+              <span>Sains Kelautan</span>
+            </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* ── Article Body ──────────────────────────────────────────── */}
-      <article className="max-w-4xl mx-auto px-6 md:px-12 py-14">
-
-        {/* Intro */}
-        <div className="max-w-3xl mb-14">
-          <div className="w-12 h-1 bg-[#162e52] rounded mb-6" />
-          <p className="text-lg sm:text-xl text-zinc-700 leading-relaxed mb-5 font-light">
-            Laut menutupi lebih dari 70 persen permukaan bumi dan menjadi sumber
-            kehidupan bagi lebih dari 3 miliar manusia. Namun, kondisi air laut yang
-            terus berubah — akibat perubahan iklim, polusi, dan aktivitas manusia —
-            mengancam ekosistem yang menjadi basis ketahanan pangan dan mata
-            pencaharian jutaan nelayan Indonesia.
+      {/* ── Article Body & Interactive Simulator ────────────────── */}
+      <article className="max-w-5xl mx-auto px-6 md:px-12 py-14">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="p-6 md:p-8 rounded-3xl bg-slate-50 border border-slate-200 mb-12 shadow-sm"
+        >
+          <div className="w-12 h-1 bg-[#162e52] rounded-full mb-4" />
+          <h2 className="text-xl md:text-2xl font-extrabold text-[#162e52] mb-3">
+            Mengapa Kesehatan Air Laut Penting Bagi Masyarakat?
+          </h2>
+          <p className="text-sm sm:text-base text-zinc-700 leading-relaxed font-light mb-4">
+            Laut menutupi lebih dari 70% bumi dan menopang mata pencaharian jutaan nelayan Indonesia. Namun, perubahan iklim, pencemaran limbah, dan pembuangan pupuk dapat merusak kualitas air secara dramatis.
           </p>
-          <p className="text-base text-zinc-600 leading-relaxed">
-            Memahami parameter kualitas air laut bukan hanya untuk para ilmuwan.
-            Sebagai masyarakat pesisir atau konsumen hasil laut, pemahaman ini
-            membantu kita membuat keputusan yang lebih bijak tentang lingkungan dan
-            pola konsumsi. Berikut adalah 5 parameter kunci yang menentukan kesehatan
-            ekosistem laut kita.
+          <p className="text-xs sm:text-sm text-zinc-600 leading-relaxed">
+            Gunakan simulator interaktif di bawah ini untuk melihat perbandingan fisik air laut sehat versus tercemar secara langsung.
           </p>
+        </motion.div>
+
+        {/* INTERACTIVE OCEAN WATER SIMULATOR COMPONENT */}
+        <div className="mb-16">
+          <OceanWaterSimulator />
         </div>
 
-        {/* Section title */}
-        <div className="flex items-center gap-4 mb-10">
-          <div className="flex-1 h-px bg-zinc-100" />
-          <span className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 px-2">
-            5 Parameter Kualitas Air Laut
-          </span>
-          <div className="flex-1 h-px bg-zinc-100" />
-        </div>
-
-        {/* Parameters */}
-        <div className="space-y-5 mb-16">
-          {PARAMETERS.map((param, index) => (
-            <div
-              key={param.number}
-              className="border border-zinc-200 rounded-2xl overflow-hidden hover:border-[#162e52]/40 hover:shadow-lg transition-all duration-300 bg-white"
-            >
-              {/* Header — always visible */}
-              <button
-                onClick={() => setActiveParam(activeParam === index ? null : index)}
-                className="w-full flex items-center gap-5 p-5 md:p-6 text-left group"
-              >
-                <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-[#162e52] text-white flex items-center justify-center font-extrabold text-sm shadow-sm">
-                  {param.number}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-extrabold text-[#162e52] text-sm uppercase tracking-wide">
-                    {param.title}
-                  </h3>
-                  <div className="flex flex-wrap items-center gap-3 mt-1.5">
-                    <span className="text-xs font-semibold text-sky-700 bg-sky-50 border border-sky-100 px-2.5 py-0.5 rounded-full">
-                      {param.valueRange}
-                    </span>
-                    <span className="text-xs text-zinc-400">{param.unit}</span>
-                  </div>
-                </div>
-                <div className={`flex-shrink-0 w-8 h-8 rounded-lg border border-zinc-200 flex items-center justify-center transition-all duration-200 ${activeParam === index ? 'bg-[#162e52] border-[#162e52]' : 'bg-white group-hover:border-zinc-400'}`}>
-                  <svg
-                    className={`w-4 h-4 transition-transform duration-200 ${activeParam === index ? 'rotate-180 text-white' : 'text-zinc-500'}`}
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2.5}
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                  </svg>
-                </div>
-              </button>
-
-              {/* Expandable content */}
-              {activeParam === index && (
-                <div className="border-t border-zinc-100 px-5 md:px-6 pb-6 pt-5 space-y-5">
-                  <p className="text-sm text-zinc-600 leading-relaxed">{param.detail}</p>
-
-                  <div>
-                    <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 mb-3">Indikator Kesehatan</p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {param.indicators.map((ind, i) => (
-                        <div key={i} className="flex items-start gap-2.5 p-3 bg-zinc-50 rounded-xl border border-zinc-100">
-                          <div className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-[#162e52] mt-1.5" />
-                          <p className="text-xs text-zinc-700 leading-relaxed">{ind}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2.5 p-3.5 bg-amber-50 border border-amber-100 rounded-xl">
-                    <svg className="w-4 h-4 text-amber-600 flex-shrink-0 mt-px" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
-                    </svg>
-                    <p className="text-xs text-amber-800 leading-relaxed">{param.warning}</p>
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* Instruction for accordion */}
-        <p className="text-xs text-zinc-400 text-center -mt-10 mb-16">
-          Klik pada setiap parameter untuk melihat penjelasan lengkap dan indikator kesehatan.
-        </p>
-
-        {/* Article image */}
-        <figure className="rounded-2xl overflow-hidden mb-16 shadow-lg border border-zinc-100">
+        {/* Article Image Banner */}
+        <figure className="rounded-2xl overflow-hidden mb-16 shadow-md border border-slate-200">
           <img
             src={articleImg.src}
             alt="Kondisi dan kualitas air laut yang sehat"
-            className="w-full object-cover max-h-72 md:max-h-80"
+            className="w-full object-cover max-h-80 md:max-h-96"
           />
-          <figcaption className="px-5 py-3.5 bg-zinc-50 border-t border-zinc-100">
-            <p className="text-xs text-zinc-500 italic">
-              Perairan laut yang sehat dicirikan dengan kejernihan tinggi, kehidupan
-              biota yang beragam, dan parameter fisika-kimia yang berada dalam rentang
-              optimal untuk keseimbangan ekosistem.
+          <figcaption className="px-6 py-4 bg-slate-50 border-t border-slate-200">
+            <p className="text-xs text-zinc-600 italic leading-relaxed">
+              Perairan laut yang sehat ditandai dengan visibilitas jernih tinggi, keanekaragaman biota pesisir yang subur, dan parameter kimia-fisika yang berada dalam rentang aman.
             </p>
           </figcaption>
         </figure>
 
-        {/* Threats section */}
+        {/* Threats Section */}
         <div className="mb-16">
-          <h2 className="text-xl font-extrabold text-[#162e52] uppercase tracking-tight mb-2">
-            Ancaman Terhadap Kualitas Air Laut
-          </h2>
-          <p className="text-sm text-zinc-500 mb-6 leading-relaxed">
-            Memahami ancaman ini adalah langkah pertama untuk menjadi konsumen dan
-            warga negara yang lebih bertanggung jawab terhadap ekosistem laut.
-          </p>
+          <div className="mb-8">
+            <span className="text-[10px] font-extrabold uppercase tracking-widest text-rose-700 bg-rose-50 px-3 py-1 rounded-full border border-rose-200">
+              Ancaman Ekosistem
+            </span>
+            <h2 className="text-2xl font-extrabold text-[#162e52] tracking-tight mt-1.5">
+              4 Faktor Utama Perusak Kualitas Air Laut
+            </h2>
+            <p className="text-xs text-zinc-500 mt-1">
+              Memahami ancaman ini membantu masyarakat bertindak bijak dalam menjaga kebersihan pesisir.
+            </p>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {THREATS.map((threat, i) => (
-              <div
+              <motion.div
                 key={i}
-                className="p-5 border border-zinc-200 rounded-2xl bg-white hover:border-red-200 hover:shadow-md transition-all duration-300"
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                whileHover={{ scale: 1.01 }}
+                className="p-5 border border-slate-200 rounded-2xl bg-white hover:border-[#162e52]/40 hover:shadow-md transition-all duration-300"
               >
-                <div className="flex items-start gap-3">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-red-50 border border-red-100 flex items-center justify-center mt-0.5">
-                    <svg className="w-4 h-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
-                    </svg>
+                <div className="flex items-start gap-4">
+                  <div className="p-2.5 rounded-xl bg-slate-100 border border-slate-200 flex-shrink-0">
+                    {threat.icon}
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-zinc-900 mb-1.5">{threat.title}</h4>
-                    <p className="text-xs text-zinc-600 leading-relaxed">{threat.desc}</p>
+                    <h4 className="text-sm font-bold text-zinc-900 mb-1">{threat.title}</h4>
+                    <p className="text-xs text-zinc-600 leading-relaxed font-normal">{threat.desc}</p>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
 
-        {/* Action callout */}
-        <div className="p-6 rounded-2xl bg-[#162e52]/5 border border-[#162e52]/15 mb-4">
-          <div className="flex items-start gap-3">
-            <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#162e52] text-white flex items-center justify-center mt-0.5">
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 3.741-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5" />
+        {/* Action Callout Section */}
+        <motion.div
+          whileInView={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, scale: 0.98 }}
+          viewport={{ once: true }}
+          className="p-6 md:p-8 rounded-3xl bg-[#162e52]/5 border border-[#162e52]/15 shadow-sm"
+        >
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl bg-[#162e52] text-white flex items-center justify-center flex-shrink-0 shadow-md">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 0 0 9-9c0-4.97-4.03-9-9-9s-9 4.03-9 9a9 9 0 0 0 9 9Z" />
               </svg>
             </div>
             <div>
-              <h3 className="text-sm font-bold text-[#162e52] uppercase tracking-wide mb-1.5">
-                Apa yang Bisa Dilakukan Masyarakat
+              <h3 className="text-base font-extrabold text-[#162e52] uppercase tracking-wide mb-2">
+                Aksi Nyata Masyarakat untuk Mengatasi Pencemaran
               </h3>
-              <p className="text-sm text-zinc-700 leading-relaxed">
-                Kurangi penggunaan plastik sekali pakai, hindari membuang sampah ke perairan, pilih produk ramah lingkungan, dan dukung program pemulihan terumbu karang di daerah Anda. Setiap tindakan kecil, bila dilakukan secara kolektif, memberikan dampak nyata bagi kesehatan ekosistem laut untuk generasi mendatang.
+              <p className="text-xs sm:text-sm text-zinc-700 leading-relaxed font-normal mb-4">
+                Kurangi penggunaan plastik sekali pakai, pastikan limbah rumah tangga tidak langsung dialirkan ke muara laut, dan dukung gerakan konservasi terumbu karang lokal.
               </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="text-[11px] font-bold px-3 py-1 rounded-full bg-white border border-[#162e52]/20 text-[#162e52]">
+                  ✓ Bebas Sampah Plastik
+                </span>
+                <span className="text-[11px] font-bold px-3 py-1 rounded-full bg-white border border-[#162e52]/20 text-[#162e52]">
+                  ✓ Olah Limbah Rumah Tangga
+                </span>
+                <span className="text-[11px] font-bold px-3 py-1 rounded-full bg-white border border-[#162e52]/20 text-[#162e52]">
+                  ✓ Lindungi Terumbu Karang
+                </span>
+              </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </article>
 
-      {/* ── Related Articles ──────────────────────────────────────── */}
-      <section className="border-t border-zinc-100 bg-zinc-50/50 py-14 px-6 md:px-12">
-        <div className="max-w-4xl mx-auto">
+      {/* ── Related Articles Section ──────────────────────────────── */}
+      <section className="border-t border-slate-200 bg-slate-50/50 py-14 px-6 md:px-12">
+        <div className="max-w-5xl mx-auto">
           <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 mb-8">
-            Baca Juga
+            Modul Pembelajaran Edukasi Lainnya
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
             <Link
               href="/dashboard/masyarakat/blog/kualitas-ikan"
-              className="group flex gap-4 p-4 border border-zinc-200 rounded-2xl bg-white hover:border-[#162e52]/40 hover:shadow-md transition-all duration-300"
+              className="group flex gap-4 p-4 border border-slate-200 rounded-2xl bg-white hover:border-[#162e52]/40 hover:shadow-md transition-all duration-300"
             >
-              <div className="flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden">
+              <div className="flex-shrink-0 w-24 h-24 rounded-xl overflow-hidden">
                 <img
                   src={relatedImg1.src}
                   alt="Kualitas Ikan"
@@ -376,19 +296,19 @@ export default function KondisiAirLautBlogPage() {
                 />
               </div>
               <div className="flex-1 min-w-0">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#162e52]/50">Panduan Konsumen</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#162e52]/60">Diagram Anatomi Interaktif</span>
                 <h4 className="text-sm font-bold text-zinc-900 mt-1 leading-snug group-hover:text-[#162e52] transition-colors line-clamp-2">
-                  Cara Membedakan Kualitas Ikan
+                  Cara Membedakan Kualitas Ikan Segar vs Busuk
                 </h4>
-                <p className="text-xs text-zinc-400 mt-1.5">5 menit baca</p>
+                <p className="text-xs text-zinc-400 mt-2">8 Indikator Visual + Quiz</p>
               </div>
             </Link>
 
             <Link
               href="/dashboard/masyarakat/blog/pengolahan-ikan"
-              className="group flex gap-4 p-4 border border-zinc-200 rounded-2xl bg-white hover:border-[#162e52]/40 hover:shadow-md transition-all duration-300"
+              className="group flex gap-4 p-4 border border-slate-200 rounded-2xl bg-white hover:border-[#162e52]/40 hover:shadow-md transition-all duration-300"
             >
-              <div className="flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden">
+              <div className="flex-shrink-0 w-24 h-24 rounded-xl overflow-hidden">
                 <img
                   src={relatedImg2.src}
                   alt="Pengolahan Ikan"
@@ -396,11 +316,11 @@ export default function KondisiAirLautBlogPage() {
                 />
               </div>
               <div className="flex-1 min-w-0">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#162e52]/50">Keamanan Pangan</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#162e52]/60">Timeline 6 Langkah</span>
                 <h4 className="text-sm font-bold text-zinc-900 mt-1 leading-snug group-hover:text-[#162e52] transition-colors line-clamp-2">
-                  Cara Pengolahan Ikan yang Benar
+                  Protokol Cara Pengolahan Ikan yang Benar
                 </h4>
-                <p className="text-xs text-zinc-400 mt-1.5">4 menit baca</p>
+                <p className="text-xs text-zinc-400 mt-2">Kalkulator Suhu & Simpan</p>
               </div>
             </Link>
           </div>
@@ -408,12 +328,12 @@ export default function KondisiAirLautBlogPage() {
           <div className="text-center">
             <Link
               href="/dashboard/masyarakat"
-              className="inline-flex items-center gap-2.5 px-7 py-3 bg-[#162e52] text-white text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#1f4275] transition-all duration-200 shadow-md"
+              className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-[#162e52] hover:bg-[#1f4275] text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-200 shadow-md"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
               </svg>
-              Kembali ke Dashboard
+              <span>Kembali ke Dashboard Utama</span>
             </Link>
           </div>
         </div>

@@ -99,7 +99,7 @@ export default function FishingForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white border-2 border-zinc-300 rounded-2xl p-6 sm:p-8 max-w-3xl mx-auto space-y-7">
+    <form onSubmit={handleSubmit} className="bg-white border-2 border-zinc-300 rounded-2xl p-6 sm:p-8 w-full space-y-7">
       <div>
         <h2 className="text-xl sm:text-2xl font-extrabold text-[#0c2d52] tracking-tight">{title}</h2>
         <p className="text-xs sm:text-sm text-zinc-600 mt-2 leading-relaxed font-normal">{description}</p>
