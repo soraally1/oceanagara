@@ -145,7 +145,7 @@ export default function DashboardNelayanPage() {
   const displayName = profile?.displayName || 'Bapak Nelayan';
 
   return (
-    <div className="min-h-screen bg-white text-zinc-900 font-sans flex flex-col selection:bg-[#204473] selection:text-white">
+    <div className="min-h-screen w-full min-w-max bg-white text-zinc-900 font-sans flex flex-col selection:bg-[#204473] selection:text-white">
 
       {/* ── Hero wrapper: background.webp + navbar + greeting + cards ── */}
       <div className="relative w-full">
@@ -157,6 +157,8 @@ export default function DashboardNelayanPage() {
             alt="Oceanagara background header"
             className="w-full h-full object-cover object-top"
           />
+          {/* Gradient overlay for smooth transition at the bottom edge */}
+          <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-white via-white/80 to-transparent" />
         </div>
 
         {/* ── Transparent Navbar ── */}

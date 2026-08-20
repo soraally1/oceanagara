@@ -71,11 +71,5 @@ export async function fetchRegionWaveData(force = false): Promise<{ points: Wave
 
   let firstPass = await executeBatch();
 
-  // If all failed on first pass, attempt one quick batch retry after 300ms
-  if (firstPass.allFailed) {
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    firstPass = await executeBatch();
-  }
-
   return firstPass;
 }

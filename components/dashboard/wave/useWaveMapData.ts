@@ -41,8 +41,15 @@ export function useWaveMapData(): WaveMapData {
       fetchWindField(force),
     ]);
 
-    setRegionPoints(regionResult.points);
+    // If regions didn't all fail, update the state.
+    // If they all failed, we KEEP the previously loaded cache in the UI!
+    if (!regionResult.allFailed) {
+      setRegionPoints(regionResult.points);
+    }
+    
     setFetchError(regionResult.allFailed);
+
+    // Same for wind grid: only update if successful.
     if (windResult.grid && windResult.meta) {
       setWindGrid(windResult.grid);
       setWindFieldMeta(windResult.meta);
