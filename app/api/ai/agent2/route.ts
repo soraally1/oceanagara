@@ -240,7 +240,7 @@ Pastikan semua koordinat titik risiko berada dalam bounding box yang diberikan.`
     const callGroq = async (apiKey: string) => {
       const client = new Groq({ apiKey });
       return client.chat.completions.create({
-        model: 'llama-3.1-8b-instant',
+        model: 'qwen/qwen3.6-27b',
         messages: [
           { role: 'system', content: SYSTEM_PROMPT },
           { role: 'user', content: dataContext },

@@ -191,7 +191,7 @@ Analisis data di atas dan hasilkan JSON sesuai format yang diminta.
 
     const completion = await groq.chat.completions
       .create({
-        model: 'llama-3.1-8b-instant',
+        model: 'qwen/qwen3.6-27b',
         messages: [
           { role: 'system', content: SYSTEM_PROMPT },
           { role: 'user', content: dataContext },

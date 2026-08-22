@@ -696,7 +696,7 @@ ${mode === 'buangan' ? vesselContext : mode === 'kapal' ? kapalContext : factory
   if (groq) {
     try {
       const completion = await groq.client.chat.completions.create({
-        model: 'llama-3.1-8b-instant',
+        model: 'qwen/qwen3.6-27b',
         messages: [
           { role: 'system', content: SYSTEM_PROMPT },
           { role: 'user', content: dataContext },

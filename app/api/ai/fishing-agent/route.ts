@@ -166,7 +166,7 @@ Beri gfwSuggestion yang SPESIFIK: sebutkan koordinat hotspot kapal, arah heading
 
     const completion = await groq.chat.completions
       .create({
-        model: 'llama-3.1-8b-instant',
+        model: 'qwen/qwen3.6-27b',
         messages: [
           { role: 'system', content: SYSTEM_PROMPT },
           { role: 'user', content: dataContext },

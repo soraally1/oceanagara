@@ -351,7 +351,7 @@ Analisis data ${photos.length > 0 ? 'dan foto ' : ''}di atas lalu hasilkan JSON 
     } else {
       // Jalur teks: model analisis tekstual (tidak membebani model vision).
       completion = await runCompletion(groq, {
-        model: 'llama-3.3-70b-versatile',
+        model: 'qwen/qwen3.6-27b',
         messages: [
           { role: 'system' as const, content: SYSTEM_PROMPT },
           { role: 'user', content: dataContext },
