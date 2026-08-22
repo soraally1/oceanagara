@@ -68,15 +68,7 @@ const POLLUTION_OPTIONS = [
       </svg>
     ),
   },
-  {
-    id: 'sedimen',
-    label: 'Sedimentasi & Runoff Pertanian',
-    icon: (
-      <svg className="w-5 h-5 text-emerald-700 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v18m0-18C8 3 4 7 4 12s4 9 8 9m0-18c4 0 8 4 8 9s-4 9-8 9" />
-      </svg>
-    ),
-  },
+
 ];
 
 export default function RiskForm({ onSubmit, isLoading }: RiskFormProps) {
@@ -347,7 +339,7 @@ export default function RiskForm({ onSubmit, isLoading }: RiskFormProps) {
               Fokus Indikator &amp; Jenis Pencemaran
             </h3>
             <p className="text-xs text-zinc-500">
-              Pilih satu atau lebih indikator risiko pencemaran yang ingin dianalisis oleh AI.
+              Pilih satu atau lebih indikator risiko pencemaran yang ingin dianalisis oleh Nagara.
             </p>
           </div>
         </div>
@@ -390,7 +382,7 @@ export default function RiskForm({ onSubmit, isLoading }: RiskFormProps) {
               Catatan &amp; Fokus Riset Tambahan (Opsional)
             </h3>
             <p className="text-xs text-zinc-500">
-              Informasi tambahan untuk membantu AI Agent (Aruna &amp; Triton) memfokuskan hasil.
+              Informasi tambahan untuk membantu Nagara memfokuskan hasil.
             </p>
           </div>
         </div>
@@ -443,14 +435,14 @@ export default function RiskForm({ onSubmit, isLoading }: RiskFormProps) {
           {isLoading ? (
             <>
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              <span>Menyiapkan Parameter AI...</span>
+              <span>Menyiapkan Parameter Nagara...</span>
             </>
           ) : (
             <>
               <svg className="w-5 h-5 text-sky-300 group-hover:rotate-12 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z" />
               </svg>
-              <span>Jalankan Analisis Agentic AI</span>
+              <span>Jalankan Analisis Nagara</span>
             </>
           )}
         </button>

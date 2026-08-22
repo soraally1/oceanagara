@@ -597,7 +597,7 @@ export default function RiskPanel({ result, satellite, solidWaste, uid, onReset 
                 AI
               </div>
               <span className="text-[10px] font-bold uppercase tracking-wider text-[#162e52]">
-                Ringkasan Analisis Agentic AI
+                Ringkasan Analisis Nagara
               </span>
             </div>
             <p className="text-xs text-zinc-600 leading-relaxed font-normal">{result.summary}</p>

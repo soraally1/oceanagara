@@ -57,8 +57,8 @@ export default function AgentChat({
           <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-400 rounded-full border-2 border-[#0d1b2e] animate-pulse" />
         </div>
         <div>
-          <p className="text-sm font-bold text-white">Aruna</p>
-          <p className="text-[11px] text-sky-300/80">AI Information Gatherer • Online</p>
+          <p className="text-sm font-bold text-white">Nagara</p>
+          <p className="text-[11px] text-sky-300/80">Nagara • Online</p>
         </div>
         {locationReady && (
           <div className="ml-auto flex items-center gap-1.5 text-emerald-400 text-[11px] font-bold uppercase tracking-wider">

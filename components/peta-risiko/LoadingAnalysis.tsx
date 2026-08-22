@@ -27,7 +27,7 @@ export default function LoadingAnalysis({ steps, locationName }: LoadingAnalysis
         Mengolah &amp; Menganalisis Data
       </h2>
       <p className="text-xs text-zinc-500 mb-8 max-w-sm">
-        {locationName ? `Area target: ${locationName}` : 'Dua Agentic AI (Aruna & Triton) sedang melakukan penarikan data dan permodelan lokasi pencemaran.'}
+        {locationName ? `Area target: ${locationName}` : 'Nagara sedang melakukan penarikan data dan permodelan lokasi pencemaran.'}
       </p>
 
       {/* Steps List */}
