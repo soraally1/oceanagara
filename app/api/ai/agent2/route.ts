@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import Groq from 'groq-sdk';
 import type { Agent2Request, Agent2Response, RiskAnalysisResult, RiskPoint } from '@/app/types/maritime';
 
-const SYSTEM_PROMPT = `Kamu adalah AI Analis Risiko Pencemaran Laut Oceanagara bernama "Triton".
+const SYSTEM_PROMPT = `Kamu adalah AI Analis Risiko Pencemaran Laut Oceanagara bernama "Nagara".
 Tugasmu adalah menganalisis data maritim mentah dan menghasilkan laporan risiko pencemaran yang akurat.
 
 Berdasarkan data yang diberikan (cuaca BMKG, aktivitas kapal GFW, sumber industri terdekat), kamu harus:
@@ -38,12 +38,6 @@ Output HARUS berupa JSON valid dengan struktur:
 Pastikan titik koordinat berada dalam bounding box yang diberikan.
 Gunakan data nyata dari API untuk menentukan titik risiko.
 Jika data API terbatas, buat analisis berdasarkan pengetahuan geografis dan pola pencemaran umum di area tersebut.`;
-
-function getGroqClient() {
-  const apiKey = process.env.GROQ_API_KEY2 ?? process.env.GROQ_API_KEY1;
-  if (!apiKey) return null;
-  return new Groq({ apiKey });
-}
 
 function generateMockRiskPoints(
   lat: number,
@@ -142,10 +136,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'location dan maritimeData diperlukan' }, { status: 400 });
     }
 
-    const groq = getGroqClient();
+    const primaryKey = process.env.GROQ_API_KEY2 ?? process.env.GROQ_API_KEY1;
 
     // ── No API key: use mock ──────────────────────────────────────────────
-    if (!groq) {
+    if (!primaryKey) {
       const mockResult = generateMockRiskPoints(
         location.lat,
         location.lon,
@@ -243,24 +237,36 @@ Analisis data di atas dan hasilkan laporan risiko pencemaran dalam format JSON y
 **PRIORITASKAN data citra satelit**: setiap anomali satelit (bloom/slick/thermal/turbidity) memiliki koordinat centroid (centerLat/centerLon) yang sudah terverifikasi dari citra — jadikan koordinat tersebut sebagai titik risiko (atau titik risiko yang sangat dekat), jangan asal pilih koordinat lain. Kandidat sampah padat Sentinel-2 (candidates dengan lat/lon dan confidence) juga wajib dijadikan titik risiko "Sampah padat terapung" — ini deteksi paling akurat yang tersedia. Sertakan nilai estimasi (klorofil mg/m³, suhu °C, pH, kepercayaan %) dan luas area pada description. Gunakan data satelit sebagai bukti utama; BMKG/GFW sebagai pendukung.
 Pastikan semua koordinat titik risiko berada dalam bounding box yang diberikan.`;
 
-    const completion = await groq.chat.completions.create({
-      model: 'llama-3.1-8b-instant',
-      messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
-        { role: 'user', content: dataContext },
-      ],
-      temperature: 0.3,
-      max_tokens: 1024,
-      response_format: { type: 'json_object' },
-    }).catch((err: unknown) => {
+    const callGroq = async (apiKey: string) => {
+      const client = new Groq({ apiKey });
+      return client.chat.completions.create({
+        model: 'llama-3.1-8b-instant',
+        messages: [
+          { role: 'system', content: SYSTEM_PROMPT },
+          { role: 'user', content: dataContext },
+        ],
+        temperature: 0.3,
+        max_tokens: 1024,
+        response_format: { type: 'json_object' },
+      });
+    };
+
+    let completion = null;
+    try {
+      completion = await callGroq(primaryKey);
+    } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
-      // TPM/rate-limit (413/429): degrade to the deterministic mock instead of failing
-      if (/413|429|rate_limit|Request too large|TPM/i.test(message)) {
-        console.warn('[Agent2] Groq rate-limited, falling back to mock:', message.slice(0, 200));
-        return null;
+      if (/413|429|rate_limit|Request too large|TPM/i.test(message) && process.env.GROQ_API_KEY3) {
+        console.warn('[Agent2] Groq rate-limited, trying GROQ_API_KEY3...');
+        try {
+          completion = await callGroq(process.env.GROQ_API_KEY3);
+        } catch (err3: unknown) {
+          console.warn('[Agent2] Groq error on key 3, falling back to mock:', String(err3).slice(0, 200));
+        }
+      } else {
+        console.warn('[Agent2] Groq error, falling back to mock:', message.slice(0, 200));
       }
-      throw err;
-    });
+    }
 
     if (!completion) {
       const mockResult = generateMockRiskPoints(
@@ -273,7 +279,19 @@ Pastikan semua koordinat titik risiko berada dalam bounding box yang diberikan.`
     }
 
     const rawText = completion.choices[0]?.message?.content ?? '{}';
-    const result = JSON.parse(rawText) as RiskAnalysisResult;
+    let result: RiskAnalysisResult;
+    try {
+      result = JSON.parse(rawText) as RiskAnalysisResult;
+    } catch (parseErr) {
+      console.warn('[Agent2] JSON parse failed, falling back to mock:', String(parseErr).slice(0, 200));
+      const mockResult = generateMockRiskPoints(
+        location.lat,
+        location.lon,
+        location.boundingBox,
+        location.regionName
+      );
+      return NextResponse.json({ result: mockResult, degraded: true } satisfies Agent2Response & { degraded?: boolean });
+    }
 
     const response: Agent2Response = { result };
     return NextResponse.json(response);
